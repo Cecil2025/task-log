@@ -1,31 +1,23 @@
-const CACHE_NAME = 'task-log-v1';
+const CACHE_NAME = 'task-log-v1-v2';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/icon.svg',
-  '/icon-72.png',
-  '/icon-96.png',
-  '/icon-128.png',
-  '/icon-144.png',
-  '/icon-152.png',
-  '/icon-192.png',
-  '/icon-384.png',
-  '/icon-512.png'
+  '/manifest.json'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+    Promise.all([
+      caches.open(CACHE_NAME).then(cache => {
+        return cache.addAll(urlsToCache).catch(error => {
+          console.log('Cache addAll failed:', error);
+        });
       })
-      .catch(error => {
-        console.log('Cache failed:', error);
-      })
+    ]).then(() => {
+      console.log('SW installed');
+      return self.skipWaiting();
+    })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('fetch', event => {
@@ -46,6 +38,10 @@ self.addEventListener('fetch', event => {
                 cache.put(event.request, responseToCache);
               });
             return response;
+          })
+          .catch(error => {
+            console.log('Fetch failed:', error);
+            return caches.match('/index.html');
           });
       })
   );
@@ -62,7 +58,9 @@ self.addEventListener('activate', event => {
           }
         })
       );
+    }).then(() => {
+      console.log('SW activated');
+      return self.clients.claim();
     })
   );
-  self.clients.claim();
 });
