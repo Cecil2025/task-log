@@ -999,6 +999,19 @@ document.getElementById('tf-reminder').addEventListener('change', function() {
     document.getElementById('tf-time-group').style.display = this.checked ? 'block' : 'none';
 });
 
+// ===== Service Worker 注册 =====
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('SW registered:', registration.scope);
+            })
+            .catch(error => {
+                console.log('SW registration failed:', error);
+            });
+    });
+}
+
 // ===== 初始化 =====
 load();
 renderTasks();
