@@ -1,6 +1,7 @@
 {
   "name": "任务日志",
   "short_name": "任务日志",
+  "id": "task-log-app",
   "description": "简洁高效的任务追踪与日志记录应用",
   "start_url": "/",
   "scope": "/",
@@ -61,14 +62,19 @@
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "新建任务",
       "short_name": "新建",
       "description": "快速创建新任务",
-      "url": "/?action=new-task",
-      "icons": [{ "src": "icon-96.png", "sizes": "96x96" }]
+      "url": "/",
+      "icons": [
+        {
+          "src": "icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
